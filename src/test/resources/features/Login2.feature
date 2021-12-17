@@ -1,19 +1,19 @@
 Feature: Error validation in login page
 
-  @errorvalidation
+  @login
   Scenario: valid username and invalid password
-    When user enters invalid credentials and click on login and verify the error
+    When user enters invalid credentials and clicks on login and verify the error
       | username | password    | errorMessage        |
       | Admin    | Hum@n       | Invalid credentials |
       | Admin1   | Hum@nhrm123 | Invalid credentials |
 
-
-  @errorvalidation
+  @error
   Scenario Outline: valid username and invalid password
     When user enters invalid "<username>" and "<password>" and clicks on login and verify the "<errorMessage>"
+
     Examples:
       | username | password    | errorMessage             |
       | Admin    | Hum@n       | Invalid credentials      |
       | Admin1   | Hum@nhrm123 | Invalid credentials      |
-      | Admin    |             | Password Cannot be empty |
-      |          | Hum@nhrm123 | Username Cannot be empty |
+      | Admin    |             | Password cannot be empty |
+      |          | Hum@nhrm123 | Username cannot be empty |
