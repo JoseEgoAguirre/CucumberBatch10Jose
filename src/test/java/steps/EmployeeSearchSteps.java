@@ -1,20 +1,18 @@
 package steps;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import pages.DashboardPage;
 import pages.EmployeeListPage;
 import pages.LoginPage;
 import utils.CommonMethods;
 import utils.ConfigReader;
+import utils.GlobalVariables;
 
 public class EmployeeSearchSteps extends CommonMethods {
-
-    @Given("user is navigated to HRMS")
-    public void user_is_navigated_to_HRMS() {
-        openBrowser();
-    }
 
     @Given("user is logged in with valid admin credentials")
     public void user_is_logged_in_with_valid_admin_credentials() {
@@ -29,34 +27,39 @@ public class EmployeeSearchSteps extends CommonMethods {
         DashboardPage dash = new DashboardPage();
         click(dash.pimOption);
         click(dash.employeeListOption);
-
     }
 
     @When("user enters valid employee id")
     public void user_enters_valid_employee_id() {
         EmployeeListPage emp = new EmployeeListPage();
-        sendText(emp.idEmployee, "20119000");
-
+        GlobalVariables.empId="20119000";
+        sendText(emp.idEmployee, GlobalVariables.empId);
     }
 
     @When("click on search button")
     public void click_on_search_button() {
         EmployeeListPage emp = new EmployeeListPage();
-        click(emp.searchButton);
+        jsClick(emp.searchButton);
     }
 
     @Then("user see employee information is displayed")
     public void user_see_employee_information_is_displayed() {
-        System.out.println("info is displayed");
-        tearDown();
+        Assert.assertEquals(GlobalVariables.mapDataFromDb.get("emp_firstname") , GlobalVariables.firstName);
+        Assert.assertEquals(GlobalVariables.mapDataFromDb.get("emp_middle_name") , GlobalVariables.middleName);
+        Assert.assertEquals(GlobalVariables.mapDataFromDb.get("emp_lastname") , GlobalVariables.lastName);
     }
-
 
     @When("user enters valid employee name")
     public void user_enters_valid_employee_name() {
         EmployeeListPage emp = new EmployeeListPage();
         sendText(emp.employeeNameField, "sohail");
     }
+
+    @Given("user is navigated to HRMS")
+    public void user_is_navigated_to_hrms() {
+        openBrowser();
+    }
+
 
 
 }

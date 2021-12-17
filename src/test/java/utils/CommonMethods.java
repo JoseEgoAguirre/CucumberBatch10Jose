@@ -9,7 +9,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -20,17 +19,24 @@ public class CommonMethods {
 
     public static WebDriver driver;
 
-
-    public void openBrowser(){
+    public void openBrowser() {
         ConfigReader.readProperties(Constants.CONFIGURATION_FILEPATH);
         switch (ConfigReader.getPropertyValue("browser")) {
             case "chrome":
                 //  System.setProperty("webdriver.chrome.driver", "src/drivers/chromedriver.exe");
 
-                ChromeOptions chromeOptions=new ChromeOptions();
-                chromeOptions.setHeadless(true);
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
+
+                if (ConfigReader.getPropertyValue("headless").equals("true")) {
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.setHeadless(true);
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver(chromeOptions);
+                } else {
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver();
+                }
+
+
                 break;
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
@@ -41,58 +47,55 @@ public class CommonMethods {
         }
 
         driver.get(ConfigReader.getPropertyValue("url"));
-        driver.manage().window().maximize();
+        //driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Constants.IMPLICIT_WAIT, TimeUnit.SECONDS);
     }
 
-    public static void sendText(WebElement element, String textToSend){
+    public static void sendText(WebElement element, String textToSend) {
         element.clear();
         element.sendKeys(textToSend);
     }
 
-    public static WebDriverWait getWait(){
+    public static WebDriverWait getWait() {
         WebDriverWait wait = new WebDriverWait(driver, Constants.EXPLICIT_WAIT);
         return wait;
     }
 
-    public static void waitForClickability(WebElement element){
+    public static void waitForClickability(WebElement element) {
         getWait().until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    public static void click(WebElement element){
+    public static void click(WebElement element) {
         waitForClickability(element);
         element.click();
     }
 
-    public static JavascriptExecutor getJSExecutor(){
+    public static JavascriptExecutor getJSExecutor() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         return js;
     }
 
-    public static void jsClick(WebElement element){
+    public static void jsClick(WebElement element) {
         getJSExecutor().executeScript("arguments[0].click();", element);
     }
 
     //class 4 methods
     //to take screenshot
     //break till 21.21
-
-    public static byte[] takeScreenshot(String fileName){
+    public static byte[] takeScreenshot(String fileName) {
         TakesScreenshot ts = (TakesScreenshot) driver;
-
-        byte[] picBytes=ts.getScreenshotAs(OutputType.BYTES);
+        byte[] picBytes = ts.getScreenshotAs(OutputType.BYTES);
         File sourceFile = ts.getScreenshotAs(OutputType.FILE);
-
-        try{
+        try {
             FileUtils.copyFile(sourceFile, new File(
                     Constants.SCREENSHOT_FILEPATH + fileName + " " + getTimeStamp("yyyy-MM-dd-HH-mm-ss") + ".png"));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return picBytes;
     }
 
-    public static String getTimeStamp(String pattern){
+    public static String getTimeStamp(String pattern) {
         Date date = new Date();
         //pattern YYYY-MM-DD-HH-MM-SS-MS
         //to format the date according to our choice we have a function
@@ -100,7 +103,8 @@ public class CommonMethods {
         return sdf.format(date);
     }
 
-    public void tearDown(){
+
+    public void tearDown() {
         driver.quit();
     }
 }

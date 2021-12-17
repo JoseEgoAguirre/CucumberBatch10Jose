@@ -8,7 +8,7 @@ import utils.CommonMethods;
 public class AddEmployeePage extends CommonMethods {
 
     @FindBy(id="firstName")
-    public WebElement firstName;
+    public WebElement firtName;
 
     @FindBy(id="middleName")
     public WebElement middleName;
@@ -37,6 +37,8 @@ public class AddEmployeePage extends CommonMethods {
     @FindBy(id="employeeId")
     public WebElement employeeId;
 
+    @FindBy(xpath = "//h1[text()='Add Employee']")
+    public WebElement headerValue;
 
     public AddEmployeePage(){
         PageFactory.initElements(driver, this);

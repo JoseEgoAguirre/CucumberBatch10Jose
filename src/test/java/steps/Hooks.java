@@ -1,23 +1,23 @@
 package steps;
 
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import org.junit.After;
-import org.junit.Before;
 import utils.CommonMethods;
 
 public class Hooks extends CommonMethods {
 
     @Before
-    public void start() {
+    public void start(){
         openBrowser();
     }
 
     @After
-    public void end(Scenario scenario) {
+    public void end(Scenario scenario){
         byte[] pic;
-        if (scenario.isFailed()) {
+        if(scenario.isFailed()){
             pic = takeScreenshot("failed/" + scenario.getName());
-        } else {
+        }else{
             pic = takeScreenshot("passed/" + scenario.getName());
         }
         //it will attach pics in report

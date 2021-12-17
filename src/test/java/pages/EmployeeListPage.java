@@ -14,7 +14,7 @@ public class EmployeeListPage extends CommonMethods {
     @FindBy(id="searchBtn")
     public WebElement searchButton;
 
-    @FindBy(id = "empsearch_employee_name_empName")
+    @FindBy(id="empsearch_employee_name_empName")
     public WebElement employeeNameField;
 
     public EmployeeListPage(){
